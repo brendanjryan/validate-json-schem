@@ -1,0 +1,22 @@
+{
+  "name": "my-awesome-package",
+  "version": "1.2.3",
+  "description": "A sample package for testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "webpack",
+    "start": "node index.js"
+  },
+  "keywords": ["test", "sample", "package"],
+  "author": "Test Author",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "webpack": "^5.74.0"
+  }
+} 

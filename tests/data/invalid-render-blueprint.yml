@@ -1,0 +1,25 @@
+services:
+  - type: "invalid-type" # Invalid: not a valid service type
+    name: "Invalid Name With Spaces" # Invalid: should be lowercase, no spaces
+    env: "unsupported-env" # Invalid: not a supported environment
+    plan: "invalid-plan" # Invalid: not a valid plan
+
+  - type: web # Missing required 'name' field
+    env: node
+    plan: starter
+
+  - name: "web-service"
+    # Missing required 'type' field
+    env: node
+
+  - type: postgres
+    name: "my-db"
+    postgresMajorVersion: 5 # Invalid: too old version
+
+  - type: redis
+    name: "my-cache"
+    maxmemoryPolicy: "invalid-policy" # Invalid: not a valid policy
+
+# Missing required 'services' field should cause this to be invalid
+# But we have it, so let's make it invalid in another way
+invalidField: "this should not be allowed"

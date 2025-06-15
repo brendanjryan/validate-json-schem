@@ -1,0 +1,11 @@
+name: 123 # Invalid: should be string, not number
+version: "not-semver" # Invalid: not a valid semver
+description: 42 # Invalid: should be string, not number
+main: [] # Invalid: should be string, not array
+scripts:
+  - "invalid" # Invalid: scripts should be object, not array
+dependencies:
+  - "should-be-object" # Invalid: dependencies should be object, not array
+engines:
+  node: "invalid version" # Invalid: not a valid version range
+license: 123 # Invalid: should be string, not number

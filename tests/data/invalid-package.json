@@ -1,0 +1,11 @@
+{
+  "name": "",
+  "version": "not-a-valid-version",
+  "description": 123,
+  "main": ["should", "be", "string"],
+  "scripts": "should be object",
+  "keywords": "should be array",
+  "dependencies": [
+    "should be object"
+  ]
+} 

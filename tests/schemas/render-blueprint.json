@@ -1,0 +1,315 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Render Blueprint",
+  "description": "Schema for Render.com blueprint files",
+  "type": "object",
+  "properties": {
+    "services": {
+      "type": "array",
+      "description": "List of services to deploy",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["web", "worker", "postgres", "redis", "cron", "static"],
+            "description": "Type of service"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Service name (lowercase, alphanumeric and hyphens only)"
+          },
+          "plan": {
+            "type": "string",
+            "enum": ["free", "starter", "standard", "pro", "pro plus", "pro max", "pro ultra"],
+            "description": "Service plan"
+          },
+          "region": {
+            "type": "string",
+            "enum": ["oregon", "ohio", "virginia", "frankfurt", "singapore"],
+            "description": "Deployment region"
+          },
+          "env": {
+            "type": "string",
+            "enum": ["node", "python", "ruby", "go", "rust", "php", "docker", "static"],
+            "description": "Runtime environment"
+          },
+          "buildCommand": {
+            "type": "string",
+            "description": "Command to build the service"
+          },
+          "startCommand": {
+            "type": "string",
+            "description": "Command to start the service"
+          },
+          "healthCheckPath": {
+            "type": "string",
+            "pattern": "^/.*",
+            "description": "Health check endpoint path"
+          },
+          "numInstances": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Number of service instances"
+          },
+          "envVars": {
+            "type": "array",
+            "description": "Environment variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Environment variable name"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Environment variable value"
+                },
+                "fromDatabase": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Database service name"
+                    },
+                    "property": {
+                      "type": "string",
+                      "enum": ["connectionString", "host", "port", "user", "password", "name"],
+                      "description": "Database property to reference"
+                    }
+                  },
+                  "required": ["name", "property"],
+                  "additionalProperties": false
+                },
+                "fromService": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["redis", "postgres"]
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Service name"
+                    },
+                    "property": {
+                      "type": "string",
+                      "enum": ["connectionString", "host", "port"],
+                      "description": "Service property to reference"
+                    }
+                  },
+                  "required": ["type", "name", "property"],
+                  "additionalProperties": false
+                },
+                "generateValue": {
+                  "type": "boolean",
+                  "description": "Whether to auto-generate a secure value"
+                }
+              },
+              "required": ["key"],
+              "oneOf": [
+                {"required": ["value"]},
+                {"required": ["fromDatabase"]},
+                {"required": ["fromService"]},
+                {"required": ["generateValue"]}
+              ],
+              "additionalProperties": false
+            }
+          },
+          "domains": {
+            "type": "array",
+            "description": "Custom domains",
+            "items": {
+              "type": "string",
+              "format": "hostname"
+            }
+          },
+          "headers": {
+            "type": "array",
+            "description": "Custom HTTP headers",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {"type": "string"},
+                "name": {"type": "string"},
+                "value": {"type": "string"}
+              },
+              "required": ["path", "name", "value"],
+              "additionalProperties": false
+            }
+          },
+          "routes": {
+            "type": "array",
+            "description": "Custom routes",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["redirect", "rewrite"]
+                },
+                "source": {"type": "string"},
+                "destination": {"type": "string"}
+              },
+              "required": ["type", "source", "destination"],
+              "additionalProperties": false
+            }
+          },
+          "pullRequestPreviewsEnabled": {
+            "type": ["boolean", "string"],
+            "enum": [true, false, "yes", "no"]
+          },
+          "schedule": {
+            "type": "string",
+            "pattern": "^[0-9*,-/\\s]+$",
+            "description": "Cron schedule expression"
+          },
+          "staticPublishPath": {
+            "type": "string",
+            "description": "Path to static files for static sites"
+          },
+          "postgresMajorVersion": {
+            "type": "integer",
+            "minimum": 11,
+            "maximum": 16,
+            "description": "PostgreSQL major version"
+          },
+          "databaseUser": {
+            "type": "string",
+            "description": "Database username"
+          },
+          "databaseName": {
+            "type": "string",
+            "description": "Database name"
+          },
+          "maxmemoryPolicy": {
+            "type": "string",
+            "enum": ["noeviction", "allkeys-lru", "volatile-lru", "allkeys-random", "volatile-random", "volatile-ttl"],
+            "description": "Redis memory eviction policy"
+          },
+          "ipAllowList": {
+            "type": "array",
+            "description": "IP allow list for Redis",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "description": "IP address or CIDR block"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the rule"
+                }
+              },
+              "required": ["source"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["type", "name"],
+        "allOf": [
+          {
+            "if": {
+              "properties": {"type": {"enum": ["web", "worker"]}}
+            },
+            "then": {
+              "required": ["env"],
+              "properties": {
+                "plan": {"enum": ["free", "starter", "standard", "pro", "pro plus", "pro max", "pro ultra"]}
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {"type": {"const": "cron"}}
+            },
+            "then": {
+              "required": ["schedule", "env"]
+            }
+          },
+          {
+            "if": {
+              "properties": {"type": {"const": "static"}}
+            },
+            "then": {
+              "required": ["buildCommand"],
+              "properties": {
+                "plan": {"enum": ["free", "starter"]}
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {"type": {"const": "postgres"}}
+            },
+            "then": {
+              "properties": {
+                "plan": {"enum": ["starter", "standard", "pro", "pro plus", "pro max", "pro ultra"]},
+                "postgresMajorVersion": {"type": "integer"}
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {"type": {"const": "redis"}}
+            },
+            "then": {
+              "properties": {
+                "plan": {"enum": ["starter", "standard", "pro", "pro plus", "pro max", "pro ultra"]},
+                "maxmemoryPolicy": {"type": "string"}
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "databases": {
+      "type": "array",
+      "description": "Database configurations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "databaseName": {"type": "string"},
+          "user": {"type": "string"}
+        },
+        "required": ["name"],
+        "additionalProperties": false
+      }
+    },
+    "envVarGroups": {
+      "type": "array",
+      "description": "Shared environment variable groups",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "envVars": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {"type": "string"},
+                "value": {"type": "string"}
+              },
+              "required": ["key", "value"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["name", "envVars"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["services"],
+  "additionalProperties": false
+} 

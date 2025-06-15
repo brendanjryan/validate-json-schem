@@ -1,0 +1,29 @@
+{
+  "services": [
+    {
+      "type": "web",
+      "name": "my-web-app",
+      "env": "node",
+      "plan": "starter",
+      "buildCommand": "npm install && npm run build",
+      "startCommand": "npm start",
+      "envVars": [
+        {
+          "key": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "key": "PORT",
+          "value": "3000"
+        }
+      ]
+    },
+    {
+      "type": "postgres",
+      "name": "my-database",
+      "plan": "starter",
+      "databaseName": "myapp",
+      "databaseUser": "myuser"
+    }
+  ]
+} 

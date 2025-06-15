@@ -1,0 +1,22 @@
+name: Invalid Workflow
+
+# Missing required 'on' field
+# on: push
+
+jobs:
+  invalid-job:
+    # Missing required 'runs-on' field
+    steps:
+      - name: Invalid step
+        # Missing required 'uses' or 'run' field
+
+      - uses: "invalid-action-format" # Should be org/action@version
+
+      - run: echo "test"
+        uses: actions/checkout@v4 # Can't have both 'run' and 'uses'
+
+  # Invalid job name with spaces and special chars
+  "job with spaces!":
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "invalid job name"

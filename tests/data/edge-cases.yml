@@ -1,0 +1,26 @@
+# Edge cases for Render blueprints
+services:
+  # Minimal web service
+  - type: web
+    name: minimal-web
+    env: static
+
+  # Service with all optional fields
+  - type: postgres
+    name: full-featured-db
+    plan: pro
+    region: virginia
+    postgresMajorVersion: 15
+    databaseUser: myuser
+    databaseName: mydb
+
+  # Redis with IP restrictions
+  - type: redis
+    name: secure-cache
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList:
+      - source: "192.168.1.0/24"
+        description: "Internal network"
+      - source: "10.0.0.0/8"
+        description: "VPN access"
