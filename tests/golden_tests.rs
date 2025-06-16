@@ -145,7 +145,7 @@ test_cases! {
     },
 }
 
-/// === Granular tests using the Validator struct ===
+// === Granular tests using the Validator struct ===
 
 /// Test URL detection functionality
 #[test]
