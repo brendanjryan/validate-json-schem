@@ -47,7 +47,7 @@ fn main() {
         .get_matches();
 
     // Handle subcommands
-    if let Some(_) = matches.subcommand_matches("clear-cache") {
+    if matches.subcommand_matches("clear-cache").is_some() {
         handle_clear_cache();
         return;
     }
